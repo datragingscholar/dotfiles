@@ -28,18 +28,21 @@ comments below can be a good boilerplate to get you started.
 
 * Summary
 
-  This setup exists to meet my specific requirements and use cases, I'll be more
-  than happy if you find it useful, though I deem this better as starter config to
-  get things going and to showcase what emacs and some popular plugins can do.
+  This setup was tailored specifically to meet my requirements and use cases,
+  I'll however be more than happy if you find it useful, though I deem this
+  better as a starter config to get things going and to showcase what emacs and
+  some popular plugins can do.
 
-  This config is heavily inspired (and copied from) [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][**Harry R. Schwartz's**]],
+  This config is heavily inspired (and copied from) [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][Harry R. Schwartz's]],
   it's his talk that got me switching to emacs in the first place.
 
 ** General Structure
 
-	[[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/init.el][=init.el=]] installs [[https://github.com/jwiegley/use-package][/use-package/]] and configures it with some popular repos.
+	Save [[https://github.com/datragingscholar/dotfiles/blob/master/.emacs.d/init.el][=init.el=]] as =~/.emacs.d/init.el=, it installs [[https://github.com/jwiegley/use-package][/use-package/]] and
+	configures it with some popular repos.
 
-	it then compiles this =conf.org= file into =conf.el= and load it with /org-babel-load-file/.
+	Save [[https://github.com/datragingscholar/dotfiles/blob/master/.emacs.d/conf.org][=conf.org=]] as =~/.emacs.d/conf.org=, =init.el= would compile this org
+	document into =conf.el= and then load it with /org-babel-load-file/.
 
   This allows /literature programming/, which helps keeping this configuration
   readable and maintainable.
@@ -51,10 +54,10 @@ comments below can be a good boilerplate to get you started.
   This is the package or plugin control system for emacs.
 
 	#+BEGIN_SRC emacs-lisp
-		(setq use-package-always-ensure t)
+    (setq use-package-always-ensure t)
     (setq load-prefer-newer t)
-		(use-package auto-compile
-		  :config (auto-compile-on-load-mode))
+    (use-package auto-compile
+      :config (auto-compile-on-load-mode))
   #+END_SRC
 
 * Default Configuration
