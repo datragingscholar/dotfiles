@@ -200,10 +200,10 @@ comments below can be a good boilerplate to get you started.
    #+BEGIN_SRC emacs-lisp
      (use-package dired-hide-dotfiles)
 
-	   (defun my-dired-mode-hook ()
-	     "My `dired' mode hook."
-        ;; To hide dot-files by default
-        (dired-hide-dotfiles-mode)
+     (defun my-dired-mode-hook ()
+       "My `dired' mode hook."
+       ;; To hide dot-files by default
+       (dired-hide-dotfiles-mode)
 
         ;; To toggle hiding
         (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
