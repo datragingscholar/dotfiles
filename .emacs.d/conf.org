@@ -79,11 +79,11 @@ comments below can be a good boilerplate to get you started.
 	Bind the M-o key to switch between windows.
 
 	#+BEGIN_SRC emcas-lips
-	  (global-set-key (kbd "M-o") 'other-window)
+    (global-set-key (kbd "M-o") 'other-window)
 	#+END_SRC
 
-* Evil Mode and VIM Stuff
-	Use [[https://github.com/Somelauw/evil-org-mode][/evil-mode/]], cause it's a sin to use vim, and a greater sin to switch to emacs.
+* Evil Mode
+	[[https://github.com/Somelauw/evil-org-mode][/evil-mode/]] enabled vim keymappings for emacs, it makes my life much easier.
 
   #+BEGIN_SRC emacs-lisp
     (use-package evil
@@ -200,15 +200,15 @@ comments below can be a good boilerplate to get you started.
    #+BEGIN_SRC emacs-lisp
      (use-package dired-hide-dotfiles)
 
-		 (defun my-dired-mode-hook ()
-			 "My `dired' mode hook."
-			 ;; To hide dot-files by default
-			 (dired-hide-dotfiles-mode)
+	   (defun my-dired-mode-hook ()
+	     "My `dired' mode hook."
+        ;; To hide dot-files by default
+        (dired-hide-dotfiles-mode)
 
-			 ;; To toggle hiding
-			 (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+        ;; To toggle hiding
+        (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
 
-		 (add-hook 'dired-mode-hook #'my-dired-mode-hook)
+     (add-hook 'dired-mode-hook #'my-dired-mode-hook)
    #+END_SRC
 
 	 These are the switches that get passed to =ls= when =dired= gets a list of files. We're using:
