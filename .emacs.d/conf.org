@@ -134,13 +134,13 @@ comments below can be a good boilerplate to get you started.
      (menu-bar-mode 0)
    #+END_SRC
 
-	 There's a tiny scroll bar that appears in the minibuffer window. This disables that:
+   There's a tiny scroll bar that appears in the minibuffer window. This disables that:
 
    #+BEGIN_SRC emacs-lisp
      (set-window-scroll-bars (minibuffer-window) nil nil)
    #+END_SRC
 
-	 The default frame title isn't useful. This binds it to the name of the current project:
+   The default frame title isn't useful. This binds it to the name of the current project:
 
    #+BEGIN_SRC emacs-lisp
      (setq frame-title-format '((:eval (projectile-project-name))))
@@ -148,7 +148,7 @@ comments below can be a good boilerplate to get you started.
 
 ** Use Fancy Lambdas
 
-	 Yea, why not.
+   Yea, why not.
 
    #+BEGIN_SRC emacs-lisp
      (global-prettify-symbols-mode t)
@@ -156,7 +156,7 @@ comments below can be a good boilerplate to get you started.
 
 ** Theme
 
-	 I like =wilson theme= from [[https://github.com/owainlewis/emacs-color-themes][/sublime themes/]].
+   I like =wilson theme= from [[https://github.com/owainlewis/emacs-color-themes][/sublime themes/]].
 
    #+BEGIN_SRC emacs-lisp
      (use-package sublime-themes)
@@ -166,9 +166,9 @@ comments below can be a good boilerplate to get you started.
 
 ** Scroll conservatively
 
-	 This prevents the screen from jumping when your cursor moves out of the window.
+   This prevents the screen from jumping when your cursor moves out of the window.
 
-	 I actually find the default /center at the cursor location/ fun and useful. Uncomment this line and try if it works for you.
+   I actually find the default /center at the cursor location/ fun and useful. Uncomment this line and try if it works for you.
 
    #+BEGIN_SRC emacs-lisp
      ;; (setq scroll-conservatively 100)
@@ -176,8 +176,8 @@ comments below can be a good boilerplate to get you started.
 
 ** Highlight the current line
 
-	 /global-hl-line-mode/ softly highlights the background color of the line containing point.
-	 It makes it a bit easier to find point, and it's useful when pairing or presenting code.
+   /global-hl-line-mode/ softly highlights the background color of the line containing point.
+   It makes it a bit easier to find point, and it's useful when pairing or presenting code.
 
    #+BEGIN_SRC emacs-lisp
      (global-hl-line-mode)
@@ -290,7 +290,8 @@ comments below can be a good boilerplate to get you started.
 
 	 [[https://github.com/jacktasia/dumb-jump][/dumb-jump/]] is the "jump to definition" package for emacs.
 
-	 I bind =M-v= and =M-w= to 'go' and 'back' respectively since I use Dvorak keyboard.
+	 I bind =M-v= and =M-w= to 'go' and 'back' respectively since I use Dvorak
+	 keyboard.
 
 	 They are equivalent to =M->= and =M-<= if you use QWERT keyboard, so change
 	 tho following keybindings if you do.
