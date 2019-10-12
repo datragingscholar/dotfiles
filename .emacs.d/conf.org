@@ -1,0 +1,905 @@
+#+TITLE: Emacs Configuration
+#+AUTHOR: Lang Hai
+#+EMAIL: send@hailang.email
+#+OPTIONS: toc:nil num:nil
+
+I've been using vim as my preferred choice of editor for a little more than
+five years by the time I decided to leave for emacs for good. During these five
+years, I've tried other text editors and IDEs, sometimes in search of a better
+editing tool, sometimes to fit the development evironment of the projects I
+worked on, but vim was trumphant as I kept installing vim emulators even when I
+was using other editors, and I always went back to it.
+
+One may have many different kinds of reasons for switching to another text
+editor, and many feel obliged to justify their reasonings as editors mean more
+than just tools to program in, they've become faith, even religions.
+
+Jokingly or seriously, switching from vim to emacs can already be considered
+*sacriligous*, let alone the fact that I actually use evil-mode to emulate vim
+key mappings to ease the learning curve. Though I have personnally gone through
+lots of thinkings and justifications to make the final decision, I figure it
+would mean little to those who doesn't care about editor wars, and even less
+to editor apologist, my reasonings may just offend them more.
+
+So to completely avoid the fruitless effort of blogging my justifications, and
+as the title of this post intended, this is about *how* I made the switch, not
+*why* I did it. If you are new to emacs, and have used vim before, my config and
+comments below can be a good boilerplate to get you started.
+
+* Summary
+
+  This setup exists to meet my specific requirements and use cases, I'll be more
+  than happy if you find it useful, though I deem this better as starter config to
+  get things going and to showcase what emacs and some popular plugins can do.
+
+  This config is heavily inspired (and copied from) [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][**Harry R. Schwartz's**]],
+  it's his talk that got me switching to emacs in the first place.
+
+** General Structure
+
+	[[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/init.el][=init.el=]] installs [[https://github.com/jwiegley/use-package][/use-package/]] and configures it with some popular repos.
+
+	it then compiles this =conf.org= file into =conf.el= and load it with /org-babel-load-file/.
+
+  This allows /literature programming/, which helps keeping this configuration
+  readable and maintainable.
+
+* Package Configuration
+
+	Make sure [[https://github.com/jwiegley/use-package][/use-package/]] auto compiles and always uses the newest version.
+
+  This is the package or plugin control system for emacs.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq use-package-always-ensure t)
+    (setq load-prefer-newer t)
+		(use-package auto-compile
+		  :config (auto-compile-on-load-mode))
+  #+END_SRC
+
+* Default Configuration
+
+	Use [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][/sensible-defaults.el/]] for some recommended default setups.
+
+	Unfortunately this can't be installed as a package. Though the repo hasn't
+	been updated for two years, makes sense to just copy-paste it into emacs.d folder.
+
+  You need to manually checkout the file into your emacs config folder.
+
+  #+BEGIN_SRC emacs-lisp
+    (load-file "~/.emacs.d/sensible-defaults.el")
+    (sensible-defaults/use-all-settings)
+    (sensible-defaults/use-all-keybindings)
+    (sensible-defaults/backup-to-temp-directory)
+  #+END_SRC
+
+	Bind the M-o key to switch between windows.
+
+	#+BEGIN_SRC emcas-lips
+	  (global-set-key (kbd "M-o") 'other-window)
+	#+END_SRC
+
+* Evil Mode and VIM Stuff
+	Use [[https://github.com/Somelauw/evil-org-mode][/evil-mode/]], cause it's a sin to use vim, and a greater sin to switch to emacs.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil
+      :config
+      (evil-mode 1))
+  #+END_SRC
+
+	Enable org-mode agenda keymaps with [[https://github.com/Somelauw/evil-org-mode][/evil-org-mode/]]. Now you can use vim key bindings in org-mode.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil-org
+      :diminish evil-org-mode
+      :after org
+      :config
+      (add-hook 'org-mode-hook 'evil-org-mode)
+      (add-hook 'evil-org-mode-hook
+                (lambda () (evil-org-set-key-theme)))
+      (require 'evil-org-agenda)
+      (evil-org-agenda-set-keys))
+  #+END_SRC
+
+	Here comes [[https://github.com/emacs-evil/evil-surround][/evil-surround/]], a ported version of [[https://github.com/tpope/vim-surround][/surround.vim/]], good stuff.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil-surround
+      :ensure t
+      :config
+      (global-evil-surround-mode 1))
+  #+END_SRC
+
+	[[https://github.com/milkypostman/powerline][/Powerline/]] for emacs, just to make you feel right at home.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package powerline-evil
+      :ensure t
+      :config
+      (powerline-evil-center-color-theme))
+  #+end_SRC
+
+* UI Preferences
+
+** Tweak window chrome
+
+	 Disables tool-bar and menu-bar, they take spaces but I rarely use them.
+
+   #+BEGIN_SRC emacs-lisp
+     (tool-bar-mode 0)
+     (menu-bar-mode 0)
+   #+END_SRC
+
+	 There's a tiny scroll bar that appears in the minibuffer window. This disables that:
+
+   #+BEGIN_SRC emacs-lisp
+     (set-window-scroll-bars (minibuffer-window) nil nil)
+   #+END_SRC
+
+	 The default frame title isn't useful. This binds it to the name of the current project:
+
+   #+BEGIN_SRC emacs-lisp
+     (setq frame-title-format '((:eval (projectile-project-name))))
+   #+END_SRC
+
+** Use Fancy Lambdas
+
+	 Yea, why not.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-prettify-symbols-mode t)
+   #+END_SRC
+
+** Theme
+
+	 I like =wilson theme= from [[https://github.com/owainlewis/emacs-color-themes][/sublime themes/]].
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package sublime-themes)
+
+     (load-theme 'wilson t)
+   #+END_SRC
+
+** Scroll conservatively
+
+	 This prevents the screen from jumping when your cursor moves out of the window.
+
+	 I actually find the default /center at the cursor location/ fun and useful. Uncomment this line and try if it works for you.
+
+   #+BEGIN_SRC emacs-lisp
+     ;; (setq scroll-conservatively 100)
+   #+END_SRC
+
+** Highlight the current line
+
+	 /global-hl-line-mode/ softly highlights the background color of the line containing point.
+	 It makes it a bit easier to find point, and it's useful when pairing or presenting code.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-hl-line-mode)
+   #+END_SRC
+
+** Diminish unnecessary modes
+
+	 Use [[https://github.com/myrjola/diminish.el][/diminish/]] to hide or abbreviates minor modes from the mode line. They continue to work, though.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package diminish)
+   #+END_SRC
+
+* Project management
+
+** dired
+
+	 Use [[https://github.com/mattiasb/dired-hide-dotfiles][/dired-hide-dotfiles/]] to hide dot files and toggle visibility with =.=.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package dired-hide-dotfiles)
+
+		 (defun my-dired-mode-hook ()
+			 "My `dired' mode hook."
+			 ;; To hide dot-files by default
+			 (dired-hide-dotfiles-mode)
+
+			 ;; To toggle hiding
+			 (define-key dired-mode-map "." #'dired-hide-dotfiles-mode))
+
+		 (add-hook 'dired-mode-hook #'my-dired-mode-hook)
+   #+END_SRC
+
+	 These are the switches that get passed to =ls= when =dired= gets a list of files. We're using:
+
+   - =l=: Use the long listing format.
+   - =h=: Use human-readable sizes.
+   - =v=: Sort numbers naturally.
+   - =a=: Include all files.
+
+   Change this if you want your folder listing in a different flavor.
+
+   #+BEGIN_SRC emacs-lisp
+		 (setq-default dired-listing-switches "-lhva")
+   #+END_SRC
+
+	 Kill buffers of files/directories that are deleted in =dired=.
+
+   #+BEGIN_SRC emacs-lisp
+		 (setq dired-clean-up-buffers-too t)
+   #+END_SRC
+
+	 Always copy directories recursively instead of asking every time.
+
+   #+BEGIN_SRC emacs-lisp
+		 (setq dired-recursive-copies 'always)
+   #+END_SRC
+
+	 Ask before recursively /deleting/ a directory, though.
+
+   #+BEGIN_SRC emacs-lisp
+		 (setq dired-recursive-deletes 'top)
+   #+END_SRC
+
+	 Open a file with an external program (I use a Mac, so it's =open=) by hitting
+	 =C-c C-o=.
+
+   #+BEGIN_SRC emacs-lisp
+		 (defun dired-xdg-open ()
+			 "In dired, open the file named on this line."
+			 (interactive)
+			 (let* ((file (dired-get-filename nil t)))
+				 (call-process "open" nil 0 nil file)))
+
+		 (define-key dired-mode-map (kbd "C-c C-o") 'dired-xdg-open)
+   #+END_SRC
+
+** ag
+
+	 Set up [[https://agel.readthedocs.io/en/latest/installation.html][/ag/]] for displaying search results. You need to install =ag= binary for this to work properly.
+
+   Run /brew install ag/ manually if you are a Mac user.
+
+   Hit =M-x=, then type =ag= or =ag-project= and press enter to search
+   recursively.
+
+   #+BEGIN_SRC emacs-lisp
+		 (use-package ag)
+   #+END_SRC
+
+** company
+
+	 Use [[http://company-mode.github.io][/company-mode/]] everywhere.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :diminish company-mode)
+     (add-hook 'after-init-hook 'global-company-mode)
+   #+END_SRC
+
+	 I use /ac-php/ for auto completion. Still useful to bind a /company-mode/ completion key.
+
+   You can hit =M-/= for auto completion no matter what language you use.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-set-key (kbd "M-/") 'company-complete-common)
+   #+END_SRC
+
+** dumb-jump
+
+	 [[https://github.com/jacktasia/dumb-jump][/dumb-jump/]] is the "jump to definition" package for emacs.
+
+	 I bind =M-v= and =M-w= to 'go' and 'back' respectively since I use Dvorak keyboard.
+
+	 They are equivalent to =M->= and =M-<= if you use QWERT keyboard, so change
+	 tho following keybindings if you do.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package dumb-jump
+       :config
+       (define-key evil-normal-state-map (kbd "M-v") 'dumb-jump-go)
+       (define-key evil-normal-state-map (kbd "M-w") 'dumb-jump-back)
+       (setq dumb-jump-selector 'ivy))
+   #+END_SRC
+
+** flycheck
+	 [[https://www.flycheck.org/en/latest/][/flycheck/]] is a on the fly syntax checking extension. It supports many
+	 programming languages out of the box.
+
+   #+BEGIN_SRC emacs-lisp
+      (use-package flycheck
+        :ensure t
+        :init (global-flycheck-mode))
+   #+END_SRC
+
+** magit
+	 [[https://magit.vc][/magit/]] is a fantastic version control extension for emacs.
+
+	 There are some tweaks here:
+	 - Bind magit status menu to =C-x g=.
+
+		 - After that, bring up help menu with =h= and select actions you want to perform.
+
+		 - It'll tell you the key binding combination for that action, you can memerize it for next time.
+
+	 - Use [[https://github.com/emacs-evil/evil-magit][evil-magit]] for evil key bindings.
+
+	 - Per [[http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html][tpope's suggestions]], highlight commit text in the summary line that goes beyond 50 characters.
+
+	 - I'd like to start in the insert state when writing a commit message.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :bind
+       ("C-x g" . magit-status)
+
+       :config
+       (use-package evil-magit)
+       (use-package with-editor)
+       (setq git-commit-summary-max-length 50)
+
+       (add-hook 'with-editor-mode-hook 'evil-insert-state))
+   #+END_SRC
+
+* Programming Language Specifics
+** General Programming
+
+	 Some adjustments and tweaks for general text editing.
+
+*** Tabs
+
+		Change tab width to 2.
+
+    #+BEGIN_SRC emacs-lisp
+      (setq-default tab-width 2)
+    #+END_SRC
+
+*** superword
+
+		I'd like to treat camelCasedWord as a whole and don't often have to navigate inside them.
+		If treating camelCasedWord as three different words is what you want, uncomment the following code.
+
+    #+BEGIN_SRC emacs-lisp
+			;; (use-package subword-mode
+			;;  :diminish subword-mode
+			;;  :config (global-subword-mode 1))
+    #+END_SRC
+
+		I enabled /superword-mode/ as a hook for /php-mode/(see PHP section) since that's what I desire mostly when working on PHP projects.
+
+*** Ya-snippet
+
+		[[https://github.com/joaotavora/yasnippet][/yasnippet/]] is a tempting system for emacs. I'm not very crazy about snippets, but it's good to know it's available.
+
+		#+BEGIN_SRC emacs-lisp
+		  (use-package yasnippet
+			  :config
+				(yas-global-mode 1))
+		#+END_SRC
+
+		I keep my non-existent snippets in =~/.emacs/snippets/text-mode=
+
+    #+BEGIN_SRC emacs-lisp
+			(setq yas-snippet-dirs '("~/.emacs.d/snippets/text-mode"))
+    #+END_SRC
+
+		I /don’t/ want =yas= to automatically indent the snippets it inserts.
+		Sometimes this looks pretty bad (when indenting org-mode, for example, or
+		trying to guess at the correct indentation for Python).
+
+    #+BEGIN_SRC emacs-lisp
+			(setq yas/indent-line nil)
+    #+END_SRC
+
+*** Spell-checking
+
+		Endable [[https://www.emacswiki.org/emacs/FlySpell][/flyspell/]] when editing text, markdown, org-mode and git commit message.
+
+    Hit =Ctrl-xs= to auto correct previous word from cursor.
+
+		#+BEGIN_SRC emacs-lisp
+			(use-package flyspell
+				:diminish flyspell-mode
+
+				:config
+				(add-hook 'text-mode-hook 'turn-on-auto-fill)
+				(add-hook 'gfm-mode-hook 'flyspell-mode)
+				(add-hook 'org-mode-hook 'flyspell-mode)
+
+				(add-hook 'git-commit-mode-hook 'flyspell-mode))
+
+      (global-set-key (kbd "\C-xs") 'flyspell-auto-correct-previous-word)
+		#+END_SRC
+
+*** Wrap paragraphs automatically
+
+		Automatically trigger [[https://www.emacswiki.org/emacs/AutoFillMode][/autofillmode/]] when edition text, markdown or in org-mode.
+		Same as hitting =M-q=
+
+    #+BEGIN_SRC emacs-lisp
+			(add-hook 'text-mode-hook 'auto-fill-mode)
+			(add-hook 'gfm-mode-hook 'auto-fill-mode)
+			(add-hook 'org-mode-hook 'auto-fill-mode)
+      (diminish 'auto-fill-function)
+    #+END_SRC
+
+*** Set up helpful
+
+		[[https://github.com/Wilfred/helpful][/helpful/]] is an alternative emacs help extension.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package helpful)
+
+      (global-set-key (kbd "C-h f") #'helpful-callable)
+      (global-set-key (kbd "C-h v") #'helpful-variable)
+      (global-set-key (kbd "C-h k") #'helpful-key)
+      (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window)
+
+      ;; Lookup the current symbol at point. C-c C-d is a common keybinding
+      ;; for this in lisp modes.
+      (global-set-key (kbd "C-c C-d") #'helpful-at-point)
+
+      ;; Look up *F*unctions (excludes macros).
+      ;;
+      ;; By default, C-h F is bound to `Info-goto-emacs-command-node'. Helpful
+      ;; already links to the manual, if a function is referenced there.
+      (global-set-key (kbd "C-h F") #'helpful-function)
+
+      ;; Look up *C*ommands.
+      ;;
+      ;; By default, C-h C is bound to describe `describe-coding-system'. I
+      ;; don't find this very useful, but it's frequently useful to only
+      ;; look at interactive functions.
+      (global-set-key (kbd "C-h C") #'helpful-command)
+    #+END_SRC
+
+*** Save my location within a file
+
+		Using =save-place-mode= saves the location of point for every file I visit.
+		If I close the file or close the editor, then later re-open it, point will
+		be at the last place I visited.
+
+    #+BEGIN_SRC emacs-lisp
+			(save-place-mode t)
+    #+END_SRC
+
+*** Always indent with spaces
+
+		Never use tabs. Tabs are the devil’s whitespace.
+
+    #+BEGIN_SRC emacs-lisp
+			(setq-default indent-tabs-mode nil)
+    #+END_SRC
+
+*** Install and configure =which-key=
+
+		[[https://github.com/justbur/emacs-which-key][/which-key/]] displays the possible completions for a long keybinding. Which is really helpful for some modes (like =projectile=, for example).
+
+    Handy when you forget a keybinding, try hitting =Ctrl-x= and wait for the magic
+    to happen.
+
+    #+BEGIN_SRC emacs-lisp
+			(use-package which-key
+				:diminish
+				:config
+				(which-key-mode))
+    #+END_SRC
+
+*** Configure Swiper
+
+		[[https://github.com/abo-abo/swiper][/swiper/]] repo contains /ivy/ for completion, /counsel/ for a collection of
+		emacs commands and /swiper/ for an alternative to isearch.
+
+		This configuration:
+
+    - Uses =counsel-M-x= for command completion,
+    - Replaces /isearch/ with /swiper/,
+		- Uses [[https://github.com/nonsequitur/smex/][/smex/]] to maintain =M-x= history,
+		- Enables fuzzy matching everywhere except swiper (where it's thoroughly unhelpful), and
+    - Includes recent files in the switch buffer.
+
+    #+BEGIN_SRC emacs-lisp
+			(use-package counsel
+				:diminish ivy-mode
+				:bind
+				("M-x" . 'counsel-M-x)
+				("C-s" . 'swiper)
+
+				:config
+				(use-package flx)
+				(use-package smex)
+
+				(ivy-mode 1)
+				(setq ivy-use-virtual-buffers t)
+				(setq ivy-count-format "(%d/%d) ")
+				(setq ivy-initial-inputs-alist nil)
+				(setq ivy-re-builders-alist
+							'((swiper . ivy--regex-plus)
+								(t . ivy--regex-fuzzy))))
+    #+END_SRC
+
+*** Switch and rebalance windows when splitting
+
+		When splitting a window, I invariably want to switch to the new window. This
+		makes that automatic.
+
+    #+BEGIN_SRC emacs-lisp
+			(defun hrs/split-window-below-and-switch ()
+				"Split the window horizontally, then switch to the new pane."
+				(interactive)
+				(split-window-below)
+				(balance-windows)
+				(other-window 1))
+
+			(defun hrs/split-window-right-and-switch ()
+				"Split the window vertically, then switch to the new pane."
+				(interactive)
+				(split-window-right)
+				(balance-windows)
+				(other-window 1))
+
+			(global-set-key (kbd "C-x 2") 'hrs/split-window-below-and-switch)
+			(global-set-key (kbd "C-x 3") 'hrs/split-window-right-and-switch)
+    #+END_SRC
+
+** Markdown
+
+    Use [[https://github.com/jrblevin/markdown-mode][/markdown-mode/]] to handle .md files and [[http://pandoc.org][/pandoc/]] for generating result.
+
+    - Associate =.md= files with GitHub-flavored Markdown.
+    - Use =pandoc= to render the results.
+    - Leave the code block font unchanged.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package markdown-mode
+        :commands gfm-mode
+
+        :mode (("\\.md$" . gfm-mode))
+
+        :config
+        (setq markdown-command "pandoc --standalone --mathjax --from=markdown")
+        (custom-set-faces
+         '(markdown-code-face ((t nil)))))
+    #+END_SRC
+
+** PHP
+
+	 There are other PHP extensions such as /phpunit/ and /composer/,
+	 but I feel they don't contribute too much to my emacs experience and I still prefer to run these manually.
+
+*** ac-php and php-mode
+
+		[[https://github.com/emacs-php/php-mode][/php-mode/]] for PHP support and [[https://github.com/xcwen/ac-php][/ac-php/]] for auto completion.
+
+		Things to note:
+		- Enable /superword-mode/ when editing PHP files.
+		- Common lisp library /cl/ as suggested by /ac-php/'s documentation was replaced by /cl-lib/ as the latter is newer and recommended.
+		- You can choose to use /auto-complet-mode/ or /company-mode/.
+		- I believe if you want /jump-to-definition/ to work, [[https://packagist.org/packages/techlivezheng/phpctags][/phpctags/]] is required to generate ctags, though I haven't been able to make it work properly.
+		- I'm using /company-mode/ and =M-v=, =M-w= from /dumb-jump/ are already good enough for now.
+		- Need to =touch .ac-php-conf-json= in root directory of the project to have /ac-php/ work properly.
+		- Need to manually run =ac-php-remake-tags-all= to regenerate tags when source code changes.
+
+    #+BEGIN_SRC emacs-lisp
+			(use-package cl-lib)
+			(use-package php-mode)
+			(use-package ac-php)
+			(use-package company-php)
+
+			(add-hook 'php-mode-hook
+					'(lambda ()
+             (superword-mode 1)
+						 (ac-php-core-eldoc-setup) ;; enable eldoc
+						 (make-local-variable 'company-backends)
+						 (add-to-list 'company-backends 'company-ac-php-backend)))
+    #+END_SRC
+
+** WEB
+
+	 I don't work much on web development, thus I only have some minimal configuration here.
+
+*** web-mode
+
+		As suggested by [[http://web-mode.org][/web-mode/]] documentation, both /add-to-list/ and /web-mode-engines-alist/ are recommened.
+		This enables web-mode for  most web templates as well as blade template for Laravel framework.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package web-mode)
+      (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+      (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+
+      (setq web-mode-engines-alist
+            '(("php"    . "\\.phtml\\'")
+              ("blade"  . "\\.blade\\."))
+      )
+    #+END_SRC
+
+*** CSS
+
+		Indent by 2 spaces when working with css files.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package css-mode
+        :config
+        (setq css-indent-offset 2))
+    #+END_SRC
+
+* Terminal
+
+	Use [[https://www.emacswiki.org/emacs/MultiTerm][/multi-term/]] for terminals and bind it to =C-c t=.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package multi-term)
+    (global-set-key (kbd "C-c t") 'multi-term)
+  #+END_SRC
+
+	Set the default shell, I use zsh.
+
+	#+BEGIN_SRC emacs-lisp
+		(setq multi-term-program "/bin/zsh")
+	#+END_SRC
+
+	Don't use evil mode in terminal buffers.
+
+	#+BEGIN_SRC emacs-lisp
+    (evil-set-initial-state 'term-mode 'emacs)
+	#+END_SRC
+
+* Org Mode
+
+	[[https://orgmode.org][/org-mode/]] is luuuuuuuuuv XD.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package org
+      :diminish org-indent-mode)
+  #+END_SRC
+
+** Display preferences
+
+	 I like to see an outline of pretty bullets instead of a list of asterisks.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package org-bullets
+       :init
+       (add-hook 'org-mode-hook 'org-bullets-mode))
+   #+END_SRC
+
+	 I like seeing a little downward-pointing arrow instead of the usual ellipsis
+	 (=...=) that org displays when there's stuff under a header.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-ellipsis "⤵")
+   #+END_SRC
+
+	 Use syntax highlighting in source blocks while editing.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-fontify-natively t)
+   #+END_SRC
+
+	 Make TAB act as if it were issued in a buffer of the language's major mode.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-tab-acts-natively t)
+   #+END_SRC
+
+	 When editing a code snippet, use the current window rather than popping open a
+	 new one (which shows the same information).
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-src-window-setup 'current-window)
+   #+END_SRC
+
+** Task and org-capture management
+
+	 Store my org files in =~/Projects/org=, the location of an index file (my main todo list), and archive finished tasks in =~/Projects/org/archive.org=.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-directory "~/Projects/org")
+
+     (defun org-file-path (filename)
+       "Return the absolute address of an org file, given its relative name."
+       (concat (file-name-as-directory org-directory) filename))
+
+     (setq org-index-file (org-file-path "index.org"))
+     (setq org-archive-location
+           (concat (org-file-path "archive.org") "::* From %s"))
+   #+END_SRC
+
+	 Set the master todo file =~/Projects/org/index.org= as the agenda file
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-agenda-files (list org-index-file))
+   #+END_SRC
+
+	 Hitting =C-c C-x C-s= will mark a todo as done and move it to an appropriate
+	 place in the archive.
+
+   #+BEGIN_SRC emacs-lisp
+     (defun hrs/mark-done-and-archive ()
+       "Mark the state of an org-mode item as DONE and archive it."
+       (interactive)
+       (org-todo 'done)
+       (org-archive-subtree))
+
+     (define-key org-mode-map (kbd "C-c C-x C-s") 'hrs/mark-done-and-archive)
+   #+END_SRC
+
+	 Record the time that a todo was archived.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq org-log-done 'time)
+   #+END_SRC
+
+**** Capturing tasks
+
+		 Define a few common tasks as capture templates.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq org-capture-templates
+             '(("n" "Notes"
+                entry (file "~/Projects/org/notes.org")
+                "* %?\n")
+
+               ("t" "Todo"
+                entry
+                (file+headline org-index-file "New Tasks")
+                "* TODO %?\n")))
+     #+END_SRC
+
+		 When I'm starting an Org capture template I'd like to begin in insert mode. I'm
+		 opening it up in order to start typing something, so this skips a step.
+
+     #+BEGIN_SRC emacs-lisp
+       (add-hook 'org-capture-mode-hook 'evil-insert-state)
+     #+END_SRC
+
+     Refiling according to the document's hierarchy.
+
+     #+BEGIN_SRC emacs-lisp
+       (setq org-refile-use-outline-path t)
+       (setq org-outline-path-complete-in-steps nil)
+     #+END_SRC
+
+**** Keybindings
+
+		 Bind a few handy keys.
+
+     #+BEGIN_SRC emacs-lisp
+	     (define-key global-map "\C-cl" 'org-store-link)
+       (define-key global-map "\C-ca" 'org-agenda)
+       (define-key global-map "\C-cs" 'org-agenda-show)
+	     (define-key global-map "\C-cc" 'org-capture)
+     #+END_SRC
+
+		 Hit =C-c i= to quickly open up my todo list.
+
+     #+BEGIN_SRC emacs-lisp
+       (defun open-index-file ()
+         "Open the master org TODO list."
+         (interactive)
+         (find-file org-index-file)
+         (flycheck-mode -1)
+         (end-of-buffer))
+
+       (global-set-key (kbd "C-c i") 'open-index-file)
+     #+END_SRC
+
+		 Bind =C-c n= to quickly open up notes.
+
+     #+BEGIN_SRC emacs-lisp
+       (defun open-note-file ()
+         "Open the master org TODO list."
+         (interactive)
+         (find-file "~/Projects/org/notes.org")
+         (flycheck-mode -1)
+         (end-of-buffer))
+
+       (global-set-key (kbd "C-c n") 'open-note-file)
+     #+END_SRC
+
+		 Hit =M-n= to quickly open up a capture template for a new todo.
+
+     #+BEGIN_SRC emacs-lisp
+       (defun org-capture-todo ()
+         (interactive)
+         (org-capture :keys "t"))
+
+       (global-set-key (kbd "M-n") 'org-capture-todo)
+     #+END_SRC
+
+
+** Export
+
+	 Use [[https://github.com/hniksic/emacs-htmlize][/htmlize/]] for exporting html file. Disable footer.
+
+	 #+BEGIN_SRC emacs-lisp
+	   (use-package htmlize)
+     (setq org-html-postamble nil)
+	 #+END_SRC
+
+* Blogging
+
+  Haven't been blogging for decades, need to sort these conf copied from hrs out
+  when I decide to blog again, later, maybe.
+
+	#+BEGIN_SRC emacs-lisp
+		(defvar hrs/jekyll-posts-directory "~/Projects/hailang.me/_posts/")
+		(defvar hrs/jekyll-post-extension ".md")
+
+		(defun hrs/replace-whitespace-with-hyphens (s)
+			(replace-regexp-in-string " " "-" s))
+
+		(defun hrs/replace-nonalphanumeric-with-whitespace (s)
+			(replace-regexp-in-string "[^A-Za-z0-9 ]" " " s))
+
+		(defun hrs/remove-quotes (s)
+			(replace-regexp-in-string "[\'\"]" "" s))
+
+		(defun hrs/replace-unusual-characters (title)
+			"Remove quotes, downcase everything, and replace characters
+		that aren't alphanumeric with hyphens."
+			(hrs/replace-whitespace-with-hyphens
+			 (s-trim
+				(downcase
+				 (hrs/replace-nonalphanumeric-with-whitespace
+					(hrs/remove-quotes title))))))
+
+		(defun hrs/slug-for (title)
+			"Given a blog post title, return a convenient URL slug.
+			 Downcase letters and remove special characters."
+			(let ((slug (hrs/replace-unusual-characters title)))
+				(while (string-match "--" slug)
+					(setq slug (replace-regexp-in-string "--" "-" slug)))
+				slug))
+
+		(defun hrs/timestamped-slug-for (title)
+			"Turn a string into a slug with a timestamp and title."
+			(concat (format-time-string "%Y-%m-%d")
+							"-"
+							(hrs/slug-for title)))
+
+		(defun hrs/jekyll-yaml-template (title)
+			"Return the YAML header information appropriate for a blog
+			 post. Include the title, the current date, the post layout,
+			 and an empty list of tags."
+			(concat
+			 "---\n"
+			 "title: " title "\n"
+			 "date: " (format-time-string "%Y-%m-%d") "\n"
+			 "layout: post\n"
+			 "tags: []\n"
+			 "---\n\n"))
+
+		(defun hrs/new-blog-post (title)
+			"Create a new blog post in Jekyll."
+			(interactive "sPost title: ")
+			(let ((post (concat hrs/jekyll-posts-directory
+													(hrs/timestamped-slug-for title)
+													hrs/jekyll-post-extension)))
+				(if (file-exists-p post)
+						(find-file post)
+					(find-file post)
+					(insert (hrs/jekyll-yaml-template title)))))
+
+    (defun hrs/existing-blog-tags ()
+      "Return a list of all the tags currently used in my blog."
+      (split-string (shell-command-to-string "cd ~/Projects/hailang.me && rake tags")))
+
+    (defun hrs/insert-blog-tag ()
+      "Select one of the current tags and insert it at point."
+      (interactive)
+      (insert
+       (ivy-completing-read "Insert tag at point: " (hrs/existing-blog-tags))))
+	#+END_SRC
+
+* Distractions
+  Add twitter, facebook here if you are keen for some distractions.
+** Mastodon
+#+BEGIN_SRC emacs-lisp
+;; (use-package mastodon)
+;; (setq mastodon-instance-url "https://cmx.social")
+#+END_SRC
