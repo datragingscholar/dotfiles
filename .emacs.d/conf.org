@@ -221,38 +221,38 @@ comments below can be a good boilerplate to get you started.
    Change this if you want your folder listing in a different flavor.
 
    #+BEGIN_SRC emacs-lisp
-		 (setq-default dired-listing-switches "-lhva")
+     (setq-default dired-listing-switches "-lhva")
    #+END_SRC
 
 	 Kill buffers of files/directories that are deleted in =dired=.
 
    #+BEGIN_SRC emacs-lisp
-		 (setq dired-clean-up-buffers-too t)
+     (setq dired-clean-up-buffers-too t)
    #+END_SRC
 
 	 Always copy directories recursively instead of asking every time.
 
    #+BEGIN_SRC emacs-lisp
-		 (setq dired-recursive-copies 'always)
+     (setq dired-recursive-copies 'always)
    #+END_SRC
 
 	 Ask before recursively /deleting/ a directory, though.
 
    #+BEGIN_SRC emacs-lisp
-		 (setq dired-recursive-deletes 'top)
+     (setq dired-recursive-deletes 'top)
    #+END_SRC
 
 	 Open a file with an external program (I use a Mac, so it's =open=) by hitting
 	 =C-c C-o=.
 
    #+BEGIN_SRC emacs-lisp
-		 (defun dired-xdg-open ()
-			 "In dired, open the file named on this line."
-			 (interactive)
-			 (let* ((file (dired-get-filename nil t)))
-				 (call-process "open" nil 0 nil file)))
+     (defun dired-xdg-open ()
+       "In dired, open the file named on this line."
+       (interactive)
+       (let* ((file (dired-get-filename nil t)))
+         (call-process "open" nil 0 nil file)))
 
-		 (define-key dired-mode-map (kbd "C-c C-o") 'dired-xdg-open)
+     (define-key dired-mode-map (kbd "C-c C-o") 'dired-xdg-open)
    #+END_SRC
 
 ** ag
