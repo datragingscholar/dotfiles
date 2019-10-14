@@ -1104,7 +1104,8 @@ comments below can be a good boilerplate to get you started.
 
   I'll keep tweaking this configuration as I continue to use this wonderful
   text editing system. Many of the functions and configs that I copied from the
-  Internet need more experimenting before I can feel comfortable hacking.
+  Internet need more experimenting before I can feel comfortable hacking, and
+  I'll need much more experience to have my own customizations and hacks.
 
   If you are thinking about switching to emacs from vim yourself and like what
   you read, consider giving it a try for a few days to see if it works for you.
