@@ -457,7 +457,8 @@ comments below can be a good boilerplate to get you started.
 
 *** Set up helpful
 
-		[[https://github.com/Wilfred/helpful][/helpful/]] is an alternative emacs help extension.
+		[[https://github.com/Wilfred/helpful][/helpful/]] is an alternative emacs help extension that provides much more
+		contextual information.
 
     #+BEGIN_SRC emacs-lisp
       (use-package helpful)
@@ -492,7 +493,7 @@ comments below can be a good boilerplate to get you started.
 		be at the last place I visited.
 
     #+BEGIN_SRC emacs-lisp
-			(save-place-mode t)
+      (save-place-mode t)
     #+END_SRC
 
 *** Always indent with spaces
@@ -500,27 +501,28 @@ comments below can be a good boilerplate to get you started.
 		Never use tabs. Tabs are the devil’s whitespace.
 
     #+BEGIN_SRC emacs-lisp
-			(setq-default indent-tabs-mode nil)
+      (setq-default indent-tabs-mode nil)
     #+END_SRC
 
 *** Install and configure =which-key=
 
-		[[https://github.com/justbur/emacs-which-key][/which-key/]] displays the possible completions for a long keybinding. Which is really helpful for some modes (like =projectile=, for example).
+		[[https://github.com/justbur/emacs-which-key][/which-key/]] displays the possible completions for a long keybinding. Which
+		is really helpful for some modes (like =projectile=, for example).
 
-    Handy when you forget a keybinding, try hitting =Ctrl-x= and wait for the magic
-    to happen.
+    Handy when you forget a keybinding, try hitting something like =Ctrl-x= and
+    wait for the magic to happen.
 
     #+BEGIN_SRC emacs-lisp
-			(use-package which-key
-				:diminish
-				:config
-				(which-key-mode))
+      (use-package which-key
+        :diminish
+        :config
+        (which-key-mode))
     #+END_SRC
 
 *** Configure Swiper
 
 		[[https://github.com/abo-abo/swiper][/swiper/]] repo contains /ivy/ for completion, /counsel/ for a collection of
-		emacs commands and /swiper/ for an alternative to isearch.
+		emacs commands and /swiper/ as an alternative to isearch.
 
 		This configuration:
 
@@ -531,23 +533,23 @@ comments below can be a good boilerplate to get you started.
     - Includes recent files in the switch buffer.
 
     #+BEGIN_SRC emacs-lisp
-			(use-package counsel
-				:diminish ivy-mode
-				:bind
-				("M-x" . 'counsel-M-x)
-				("C-s" . 'swiper)
+      (use-package counsel
+        :diminish ivy-mode
+        :bind
+        ("M-x" . 'counsel-M-x)
+        ("C-s" . 'swiper)
 
-				:config
-				(use-package flx)
-				(use-package smex)
+        :config
+        (use-package flx)
+        (use-package smex)
 
-				(ivy-mode 1)
-				(setq ivy-use-virtual-buffers t)
-				(setq ivy-count-format "(%d/%d) ")
-				(setq ivy-initial-inputs-alist nil)
-				(setq ivy-re-builders-alist
-							'((swiper . ivy--regex-plus)
-								(t . ivy--regex-fuzzy))))
+        (ivy-mode 1)
+        (setq ivy-use-virtual-buffers t)
+        (setq ivy-count-format "(%d/%d) ")
+        (setq ivy-initial-inputs-alist nil)
+        (setq ivy-re-builders-alist
+          '((swiper . ivy--regex-plus)
+            (t . ivy--regex-fuzzy))))
     #+END_SRC
 
 *** Switch and rebalance windows when splitting
@@ -556,22 +558,22 @@ comments below can be a good boilerplate to get you started.
 		makes that automatic.
 
     #+BEGIN_SRC emacs-lisp
-			(defun hrs/split-window-below-and-switch ()
-				"Split the window horizontally, then switch to the new pane."
-				(interactive)
-				(split-window-below)
-				(balance-windows)
-				(other-window 1))
+      (defun hrs/split-window-below-and-switch ()
+        "Split the window horizontally, then switch to the new pane."
+        (interactive)
+        (split-window-below)
+        (balance-windows)
+        (other-window 1))
 
-			(defun hrs/split-window-right-and-switch ()
-				"Split the window vertically, then switch to the new pane."
-				(interactive)
-				(split-window-right)
-				(balance-windows)
-				(other-window 1))
+      (defun hrs/split-window-right-and-switch ()
+        "Split the window vertically, then switch to the new pane."
+        (interactive)
+        (split-window-right)
+        (balance-windows)
+        (other-window 1))
 
-			(global-set-key (kbd "C-x 2") 'hrs/split-window-below-and-switch)
-			(global-set-key (kbd "C-x 3") 'hrs/split-window-right-and-switch)
+      (global-set-key (kbd "C-x 2") 'hrs/split-window-below-and-switch)
+      (global-set-key (kbd "C-x 3") 'hrs/split-window-right-and-switch)
     #+END_SRC
 
 ** Markdown
@@ -604,26 +606,28 @@ comments below can be a good boilerplate to get you started.
 		[[https://github.com/emacs-php/php-mode][/php-mode/]] for PHP support and [[https://github.com/xcwen/ac-php][/ac-php/]] for auto completion.
 
 		Things to note:
-		- Enable /superword-mode/ when editing PHP files.
-		- Common lisp library /cl/ as suggested by /ac-php/'s documentation was replaced by /cl-lib/ as the latter is newer and recommended.
+		- Enabled /superword-mode/ when editing PHP files.
+		- Common lisp library /cl/ as suggested by /ac-php/'s documentation was
+      replaced by /cl-lib/ as the latter is newer and recommended.
 		- You can choose to use /auto-complet-mode/ or /company-mode/.
-		- I believe if you want /jump-to-definition/ to work, [[https://packagist.org/packages/techlivezheng/phpctags][/phpctags/]] is required to generate ctags, though I haven't been able to make it work properly.
-		- I'm using /company-mode/ and =M-v=, =M-w= from /dumb-jump/ are already good enough for now.
+		- I believe if you want /jump-to-definition/ to work, [[https://packagist.org/packages/techlivezheng/phpctags][/phpctags/]] is required
+      to generate ctags, though I haven't been able to make it work properly.
+		- I'm using /company-mode/, =M-v= and =M-w= from /dumb-jump/ work good enough for now.
 		- Need to =touch .ac-php-conf-json= in root directory of the project to have /ac-php/ work properly.
 		- Need to manually run =ac-php-remake-tags-all= to regenerate tags when source code changes.
 
     #+BEGIN_SRC emacs-lisp
-			(use-package cl-lib)
-			(use-package php-mode)
-			(use-package ac-php)
-			(use-package company-php)
+      (use-package cl-lib)
+      (use-package php-mode)
+      (use-package ac-php)
+      (use-package company-php)
 
-			(add-hook 'php-mode-hook
-					'(lambda ()
-             (superword-mode 1)
-						 (ac-php-core-eldoc-setup) ;; enable eldoc
-						 (make-local-variable 'company-backends)
-						 (add-to-list 'company-backends 'company-ac-php-backend)))
+      (add-hook 'php-mode-hook
+        '(lambda ()
+          (superword-mode 1)
+          (ac-php-core-eldoc-setup) ;; enable eldoc
+          (make-local-variable 'company-backends)
+          (add-to-list 'company-backends 'company-ac-php-backend)))
     #+END_SRC
 
 ** WEB
