@@ -1077,3 +1077,16 @@ comments below can be a good boilerplate to get you started.
            (error "No email account found"))))
      (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
    #+END_SRC
+
+** Org Integration
+
+   I use /org-mu4e/ to store emails or search queries as links (org-store-link),
+   insert links in any org document such as my todo list (org-store-link) and
+   follow the link when I need to (evil-org-open-links).
+
+   Refer to [[https://www.djcbsoftware.nl/code/mu/mu4e/Org_002dmode-links.html][/this link/]] for more customizations.
+
+   #+BEGIN_SRC emacs-lisp
+     (require 'org-mu4e)
+     (setq org-mu4e-link-query-in-headers-mode nil)
+   #+END_SRC
