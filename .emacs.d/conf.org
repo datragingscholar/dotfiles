@@ -8,7 +8,7 @@ five years by the time I decided to leave for emacs for good. During these five
 years, I've tried other text editors and IDEs, sometimes in search of a better
 editing tool, sometimes to fit the development evironment of the projects I
 worked on, but vim was trumphant as I kept installing vim emulators even when I
-was using other editors, and I always went back to it.
+was using other editors, and I always went back to it eventually.
 
 One may have many different kinds of reasons for switching to another text
 editor, and many feel obliged to justify their reasonings as editors mean more
@@ -19,7 +19,7 @@ Jokingly or seriously, switching from vim to emacs can already be considered
 key mappings to ease the learning curve. Though I have personnally gone through
 lots of thinkings and justifications to make the final decision, I figure it
 would mean little to those who doesn't care about editor wars, and even less
-to editor apologist, my reasonings may just offend them more.
+to editor apologists, my reasonings may just offend them more.
 
 So to completely avoid the fruitless effort of blogging my justifications, and
 as the title of this post intended, this is about *how* I made the switch, not
@@ -29,9 +29,9 @@ comments below can be a good boilerplate to get you started.
 * Summary
 
   This setup was tailored specifically to meet my requirements and use cases,
-  I'll however be more than happy if you find it useful, though I deem this
-  better as a starter config to get things going and to showcase what emacs and
-  some popular plugins can do.
+  I'll however be more than happy if you find it useful out-of-the-box, though I
+  deem this better as a starter config to get things going and to showcase what
+  emacs and some popular plugins can do.
 
   This config is heavily inspired (and copied from) [[https://github.com/hrs/dotfiles/blob/master/emacs/.emacs.d/configuration.org][Harry R. Schwartz's]],
   it's his talk that got me switching to emacs in the first place.
@@ -51,7 +51,7 @@ comments below can be a good boilerplate to get you started.
 
 	Make sure [[https://github.com/jwiegley/use-package][/use-package/]] auto compiles and always uses the newest version.
 
-  This is the package or plugin control system for emacs.
+  This is the package or plugin control system if you will for emacs.
 
 	#+BEGIN_SRC emacs-lisp
     (setq use-package-always-ensure t)
@@ -67,7 +67,8 @@ comments below can be a good boilerplate to get you started.
 	Unfortunately this can't be installed as a package. Though the repo hasn't
 	been updated for two years, makes sense to just copy-paste it into emacs.d folder.
 
-  You need to manually checkout the file into your emacs config folder.
+  You need to manually checkout the file into your emacs config folder for this
+  to work properly.
 
   #+BEGIN_SRC emacs-lisp
     (load-file "~/.emacs.d/sensible-defaults.el")
@@ -76,14 +77,15 @@ comments below can be a good boilerplate to get you started.
     (sensible-defaults/backup-to-temp-directory)
   #+END_SRC
 
-	Bind the M-o key to switch between windows.
+	Bind the M-o key to switch between windows. This does not work on my Macbook
+	though, need to find out why. The good old /C-x o/ works perfectly still.
 
 	#+BEGIN_SRC emcas-lips
     (global-set-key (kbd "M-o") 'other-window)
 	#+END_SRC
 
 * Evil Mode
-	[[https://github.com/Somelauw/evil-org-mode][/evil-mode/]] enabled vim keymappings for emacs, it makes my life much easier.
+	[[https://github.com/Somelauw/evil-org-mode][/evil-mode/]] enables vim keymappings for emacs, it makes my life much easier.
 
   #+BEGIN_SRC emacs-lisp
     (use-package evil
@@ -114,7 +116,7 @@ comments below can be a good boilerplate to get you started.
       (global-evil-surround-mode 1))
   #+END_SRC
 
-	[[https://github.com/milkypostman/powerline][/Powerline/]] for emacs, just to make you feel right at home.
+	[[https://github.com/milkypostman/powerline][/Powerline/]] for emacs, to make you feel right at home.
 
   #+BEGIN_SRC emacs-lisp
     (use-package powerline-evil
@@ -134,13 +136,15 @@ comments below can be a good boilerplate to get you started.
      (menu-bar-mode 0)
    #+END_SRC
 
-   There's a tiny scroll bar that appears in the minibuffer window. This disables that:
+   There's a tiny scroll bar that appears in the minibuffer window. This
+   disables that:
 
    #+BEGIN_SRC emacs-lisp
      (set-window-scroll-bars (minibuffer-window) nil nil)
    #+END_SRC
 
-   The default frame title isn't useful. This binds it to the name of the current project:
+   The default frame title isn't useful. This binds it to the name of the
+   current projectile project:
 
    #+BEGIN_SRC emacs-lisp
      (setq frame-title-format '((:eval (projectile-project-name))))
@@ -265,7 +269,7 @@ comments below can be a good boilerplate to get you started.
    recursively.
 
    #+BEGIN_SRC emacs-lisp
-		 (use-package ag)
+     (use-package ag)
    #+END_SRC
 
 ** company
@@ -294,7 +298,7 @@ comments below can be a good boilerplate to get you started.
 	 keyboard.
 
 	 They are equivalent to =M->= and =M-<= if you use QWERT keyboard, so change
-	 tho following keybindings if you do.
+	 the following keybindings if you do.
 
    #+BEGIN_SRC emacs-lisp
      (use-package dumb-jump
@@ -400,7 +404,8 @@ comments below can be a good boilerplate to get you started.
 
 *** Ya-snippet
 
-		[[https://github.com/joaotavora/yasnippet][/yasnippet/]] is a tempting system for emacs. I'm not very crazy about snippets, but it's good to know it's available.
+		[[https://github.com/joaotavora/yasnippet][/yasnippet/]] is a templating system for emacs. I'm not very crazy about
+		snippets, but it's good to know it's available.
 
 		#+BEGIN_SRC emacs-lisp
       (use-package yasnippet
@@ -700,7 +705,7 @@ comments below can be a good boilerplate to get you started.
 	Set the default shell, I use zsh.
 
 	#+BEGIN_SRC emacs-lisp
-		(setq multi-term-program "/bin/zsh")
+    (setq multi-term-program "/bin/zsh")
 	#+END_SRC
 
 	Don't use evil mode in terminal buffers.
@@ -711,8 +716,8 @@ comments below can be a good boilerplate to get you started.
 
 * Org Mode
 
-	[[https://orgmode.org][/org-mode/]] is luuuuuuuuuv. If you haven't made your mind yet, click on the
-	link and read about org-mode.
+	[[https://orgmode.org][/org-mode/]] is luuuuuuuuuv. If you haven't made your mind switching to emacs
+	yet, click on the link and read about org-mode.
 
   #+BEGIN_SRC emacs-lisp
     (use-package org
@@ -887,6 +892,10 @@ comments below can be a good boilerplate to get you started.
 
   Copied these from hrs's config as I also blog with jekyll. You may need to
   modify some paths to have it working correctly for you.
+
+  I don't yet want to introduce more key chords for blogging functionalities,
+  use /M-x/ to invoke these functions or bind your customized key chords as you
+  like.
 
 	#+BEGIN_SRC emacs-lisp
     (defvar hrs/jekyll-posts-directory "~/Projects/ragingscholar/_posts/")
@@ -1090,3 +1099,20 @@ comments below can be a good boilerplate to get you started.
      (require 'org-mu4e)
      (setq org-mu4e-link-query-in-headers-mode nil)
    #+END_SRC
+
+* Further On
+
+  I'll keep tweaking this configuration as I continue to use this wonderful
+  text editing system. Many of the functions and configs that I copied from the
+  Internet need more experimenting before I can feel comfortable hacking.
+
+  If you are thinking about switching to emacs from vim yourself and like what
+  you read, consider giving it a try for a few days to see if it works for you.
+
+  You can certainly try my configuration out even if you've never used vim
+  before, though that would make /evil-mode/ and its related keybinding settings
+  less sensible. I would highly recommend learning the /original/ emacs
+  keybindings in this case.
+
+  Check back to this repository for updates if you liked it, have fun hacking
+  around!
