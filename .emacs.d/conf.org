@@ -632,12 +632,12 @@ comments below can be a good boilerplate to get you started.
 
 ** WEB
 
-	 I don't work much on web development, thus I only have some minimal configuration here.
+	 I don't work much on front-end development, I only have some minimal configuration here.
 
 *** web-mode
 
 		As suggested by [[http://web-mode.org][/web-mode/]] documentation, both /add-to-list/ and /web-mode-engines-alist/ are recommened.
-		This enables web-mode for  most web templates as well as blade template for Laravel framework.
+		This enables web-mode for most web templates as well as blade template for Laravel framework.
 
     #+BEGIN_SRC emacs-lisp
       (use-package web-mode)
@@ -655,7 +655,7 @@ comments below can be a good boilerplate to get you started.
       )
     #+END_SRC
 
-*** CSS
+*** CSS, Sass, and Less
 
 		Indent by 2 spaces when working with css files.
 
@@ -663,6 +663,28 @@ comments below can be a good boilerplate to get you started.
       (use-package css-mode
         :config
         (setq css-indent-offset 2))
+    #+END_SRC
+
+    Don’t compile the current SCSS file every time I save.
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package scss-mode
+        :config
+        (setq scss-compile-at-save nil))
+    #+END_SRC
+
+    Install Less
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package less-css-mode)
+    #+END_SRC
+
+*** Javascript
+
+    Indent javascripts by 2 spaces
+
+    #+BEGIN_SRC emacs-lisp
+      (setq js-indent-level 2)
     #+END_SRC
 
 * Terminal
