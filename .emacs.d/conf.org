@@ -343,6 +343,35 @@ comments below can be a good boilerplate to get you started.
        (add-hook 'with-editor-mode-hook 'evil-insert-state))
    #+END_SRC
 
+** Projectile
+   [[https://github.com/bbatsov/projectile][/projectile/]] is a project interaction library for emacs which enables
+   functionalities like switching between projects, search for file in a
+   project, replace in project and so on.
+
+   The following enables projectile globally, customizes some key chords and
+   sets the default directory to look for projects. You can find a more detailed
+   customization guide in its documentation.
+
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :bind
+       ("C-c v" . 'projectile-ag)
+
+       :config
+       (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+       (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
+       (evil-define-key 'motion ag-mode-map (kbd "C-p") 'projectile-find-file)
+       (evil-define-key 'motion rspec-mode-map (kbd "C-p") 'projectile-find-file)
+
+       (setq projectile-completion-system 'ivy)
+       (setq projectile-switch-project-action 'projectile-dired)
+       (setq projectile-require-project-root nil))
+       (setq projectile-project-search-path '("~/Projects/"))
+
+     (projectile-global-mode)
+   #+END_SRC
+
 * Programming Language Specifics
 ** General Programming
 
@@ -362,9 +391,9 @@ comments below can be a good boilerplate to get you started.
 		If treating camelCasedWord as three different words is what you want, uncomment the following code.
 
     #+BEGIN_SRC emacs-lisp
-			;; (use-package subword-mode
-			;;  :diminish subword-mode
-			;;  :config (global-subword-mode 1))
+      ;; (use-package subword-mode
+      ;;  :diminish subword-mode
+      ;;  :config (global-subword-mode 1))
     #+END_SRC
 
 		I enabled /superword-mode/ as a hook for /php-mode/(see PHP section) since that's what I desire mostly when working on PHP projects.
@@ -374,15 +403,16 @@ comments below can be a good boilerplate to get you started.
 		[[https://github.com/joaotavora/yasnippet][/yasnippet/]] is a tempting system for emacs. I'm not very crazy about snippets, but it's good to know it's available.
 
 		#+BEGIN_SRC emacs-lisp
-		  (use-package yasnippet
-			  :config
-				(yas-global-mode 1))
+      (use-package yasnippet
+        :diminish yasnippet-mode
+        :config
+        (yas-global-mode 1))
 		#+END_SRC
 
 		I keep my non-existent snippets in =~/.emacs/snippets/text-mode=
 
     #+BEGIN_SRC emacs-lisp
-			(setq yas-snippet-dirs '("~/.emacs.d/snippets/text-mode"))
+      (setq yas-snippet-dirs '("~/.emacs.d/snippets/text-mode"))
     #+END_SRC
 
 		I /don’t/ want =yas= to automatically indent the snippets it inserts.
@@ -390,7 +420,7 @@ comments below can be a good boilerplate to get you started.
 		trying to guess at the correct indentation for Python).
 
     #+BEGIN_SRC emacs-lisp
-			(setq yas/indent-line nil)
+      (setq yas/indent-line nil)
     #+END_SRC
 
 *** Spell-checking
@@ -400,15 +430,15 @@ comments below can be a good boilerplate to get you started.
     Hit =Ctrl-xs= to auto correct previous word from cursor.
 
 		#+BEGIN_SRC emacs-lisp
-			(use-package flyspell
-				:diminish flyspell-mode
+      (use-package flyspell
+        :diminish flyspell-mode
 
-				:config
-				(add-hook 'text-mode-hook 'turn-on-auto-fill)
-				(add-hook 'gfm-mode-hook 'flyspell-mode)
-				(add-hook 'org-mode-hook 'flyspell-mode)
+        :config
+        (add-hook 'text-mode-hook 'turn-on-auto-fill)
+        (add-hook 'gfm-mode-hook 'flyspell-mode)
+        (add-hook 'org-mode-hook 'flyspell-mode)
 
-				(add-hook 'git-commit-mode-hook 'flyspell-mode))
+        (add-hook 'git-commit-mode-hook 'flyspell-mode))
 
       (global-set-key (kbd "\C-xs") 'flyspell-auto-correct-previous-word)
 		#+END_SRC
@@ -419,9 +449,9 @@ comments below can be a good boilerplate to get you started.
 		Same as hitting =M-q=
 
     #+BEGIN_SRC emacs-lisp
-			(add-hook 'text-mode-hook 'auto-fill-mode)
-			(add-hook 'gfm-mode-hook 'auto-fill-mode)
-			(add-hook 'org-mode-hook 'auto-fill-mode)
+      (add-hook 'text-mode-hook 'auto-fill-mode)
+      (add-hook 'gfm-mode-hook 'auto-fill-mode)
+      (add-hook 'org-mode-hook 'auto-fill-mode)
       (diminish 'auto-fill-function)
     #+END_SRC
 
