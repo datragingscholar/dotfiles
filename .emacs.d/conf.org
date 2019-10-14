@@ -687,6 +687,7 @@ comments below can be a good boilerplate to get you started.
       (setq js-indent-level 2)
     #+END_SRC
 
+
 * Terminal
 
 	Use [[https://www.emacswiki.org/emacs/MultiTerm][/multi-term/]] for terminals and bind it to =C-c t=.
@@ -710,7 +711,8 @@ comments below can be a good boilerplate to get you started.
 
 * Org Mode
 
-	[[https://orgmode.org][/org-mode/]] is luuuuuuuuuv XD.
+	[[https://orgmode.org][/org-mode/]] is luuuuuuuuuv. If you haven't made your mind yet, click on the
+	link and read about org-mode.
 
   #+BEGIN_SRC emacs-lisp
     (use-package org
@@ -800,14 +802,14 @@ comments below can be a good boilerplate to get you started.
 
      #+BEGIN_SRC emacs-lisp
        (setq org-capture-templates
-             '(("n" "Notes"
-                entry (file "~/Projects/org/notes.org")
-                "* %?\n")
+         '(("n" "Notes"
+           entry (file "~/Projects/org/notes.org")
+           "* %?\n")
 
-               ("t" "Todo"
-                entry
-                (file+headline org-index-file "New Tasks")
-                "* TODO %?\n")))
+           ("t" "Todo"
+            entry
+            (file+headline org-index-file "New Tasks")
+            "* TODO %?\n")))
      #+END_SRC
 
 		 When I'm starting an Org capture template I'd like to begin in insert mode. I'm
@@ -829,10 +831,10 @@ comments below can be a good boilerplate to get you started.
 		 Bind a few handy keys.
 
      #+BEGIN_SRC emacs-lisp
-	     (define-key global-map "\C-cl" 'org-store-link)
+       (define-key global-map "\C-cl" 'org-store-link)
        (define-key global-map "\C-ca" 'org-agenda)
        (define-key global-map "\C-cs" 'org-agenda-show)
-	     (define-key global-map "\C-cc" 'org-capture)
+       (define-key global-map "\C-cc" 'org-capture)
      #+END_SRC
 
 		 Hit =C-c i= to quickly open up my todo list.
@@ -852,7 +854,7 @@ comments below can be a good boilerplate to get you started.
 
      #+BEGIN_SRC emacs-lisp
        (defun open-note-file ()
-         "Open the master org TODO list."
+         "Open the notes."
          (interactive)
          (find-file "~/Projects/org/notes.org")
          (flycheck-mode -1)
@@ -877,89 +879,204 @@ comments below can be a good boilerplate to get you started.
 	 Use [[https://github.com/hniksic/emacs-htmlize][/htmlize/]] for exporting html file. Disable footer.
 
 	 #+BEGIN_SRC emacs-lisp
-	   (use-package htmlize)
+     (use-package htmlize)
      (setq org-html-postamble nil)
 	 #+END_SRC
 
 * Blogging
 
-  Haven't been blogging for decades, need to sort these conf copied from hrs out
-  when I decide to blog again, later, maybe.
+  Copied these from hrs's config as I also blog with jekyll. You may need to
+  modify some paths to have it working correctly for you.
 
 	#+BEGIN_SRC emacs-lisp
-		(defvar hrs/jekyll-posts-directory "~/Projects/hailang.me/_posts/")
-		(defvar hrs/jekyll-post-extension ".md")
+    (defvar hrs/jekyll-posts-directory "~/Projects/ragingscholar/_posts/")
+    (defvar hrs/jekyll-post-extension ".md")
 
-		(defun hrs/replace-whitespace-with-hyphens (s)
-			(replace-regexp-in-string " " "-" s))
+    (defun hrs/replace-whitespace-with-hyphens (s)
+      (replace-regexp-in-string " " "-" s))
 
-		(defun hrs/replace-nonalphanumeric-with-whitespace (s)
-			(replace-regexp-in-string "[^A-Za-z0-9 ]" " " s))
+    (defun hrs/replace-nonalphanumeric-with-whitespace (s)
+      (replace-regexp-in-string "[^A-Za-z0-9 ]" " " s))
 
-		(defun hrs/remove-quotes (s)
-			(replace-regexp-in-string "[\'\"]" "" s))
+    (defun hrs/remove-quotes (s)
+      (replace-regexp-in-string "[\'\"]" "" s))
 
-		(defun hrs/replace-unusual-characters (title)
-			"Remove quotes, downcase everything, and replace characters
-		that aren't alphanumeric with hyphens."
-			(hrs/replace-whitespace-with-hyphens
-			 (s-trim
-				(downcase
-				 (hrs/replace-nonalphanumeric-with-whitespace
-					(hrs/remove-quotes title))))))
+    (defun hrs/replace-unusual-characters (title)
+      "Remove quotes, downcase everything, and replace characters
+    that aren't alphanumeric with hyphens."
+      (hrs/replace-whitespace-with-hyphens
+       (s-trim
+        (downcase
+         (hrs/replace-nonalphanumeric-with-whitespace
+          (hrs/remove-quotes title))))))
 
-		(defun hrs/slug-for (title)
-			"Given a blog post title, return a convenient URL slug.
-			 Downcase letters and remove special characters."
-			(let ((slug (hrs/replace-unusual-characters title)))
-				(while (string-match "--" slug)
-					(setq slug (replace-regexp-in-string "--" "-" slug)))
-				slug))
+    (defun hrs/slug-for (title)
+      "Given a blog post title, return a convenient URL slug.
+       Downcase letters and remove special characters."
+      (let ((slug (hrs/replace-unusual-characters title)))
+        (while (string-match "--" slug)
+          (setq slug (replace-regexp-in-string "--" "-" slug)))
+        slug))
 
-		(defun hrs/timestamped-slug-for (title)
-			"Turn a string into a slug with a timestamp and title."
-			(concat (format-time-string "%Y-%m-%d")
-							"-"
-							(hrs/slug-for title)))
+    (defun hrs/timestamped-slug-for (title)
+      "Turn a string into a slug with a timestamp and title."
+      (concat (format-time-string "%Y-%m-%d")
+              "-"
+              (hrs/slug-for title)))
 
-		(defun hrs/jekyll-yaml-template (title)
-			"Return the YAML header information appropriate for a blog
-			 post. Include the title, the current date, the post layout,
-			 and an empty list of tags."
-			(concat
-			 "---\n"
-			 "title: " title "\n"
-			 "date: " (format-time-string "%Y-%m-%d") "\n"
-			 "layout: post\n"
-			 "tags: []\n"
-			 "---\n\n"))
+    (defun hrs/jekyll-yaml-template (title)
+      "Return the YAML header information appropriate for a blog
+       post. Include the title, the current date, the post layout,
+       and an empty list of tags."
+      (concat
+       "---\n"
+       "title: " title "\n"
+       "date: " (format-time-string "%Y-%m-%d") "\n"
+       "layout: post\n"
+       "# pdf_file: " (hrs/slug-for title) ".pdf\n"
+       "tags: []\n"
+       "---\n\n"))
 
-		(defun hrs/new-blog-post (title)
-			"Create a new blog post in Jekyll."
-			(interactive "sPost title: ")
-			(let ((post (concat hrs/jekyll-posts-directory
-													(hrs/timestamped-slug-for title)
-													hrs/jekyll-post-extension)))
-				(if (file-exists-p post)
-						(find-file post)
-					(find-file post)
-					(insert (hrs/jekyll-yaml-template title)))))
-
-    (defun hrs/existing-blog-tags ()
-      "Return a list of all the tags currently used in my blog."
-      (split-string (shell-command-to-string "cd ~/Projects/hailang.me && rake tags")))
-
-    (defun hrs/insert-blog-tag ()
-      "Select one of the current tags and insert it at point."
-      (interactive)
-      (insert
-       (ivy-completing-read "Insert tag at point: " (hrs/existing-blog-tags))))
+    (defun hrs/new-blog-post (title)
+      "Create a new blog post in Jekyll."
+      (interactive "sPost title: ")
+      (let ((post (concat hrs/jekyll-posts-directory
+                          (hrs/timestamped-slug-for title)
+                          hrs/jekyll-post-extension)))
+        (if (file-exists-p post)
+            (find-file post)
+          (find-file post)
+          (insert (hrs/jekyll-yaml-template title)))))
 	#+END_SRC
 
-* Distractions
-  Add twitter, facebook here if you are keen for some distractions.
-** Mastodon
-#+BEGIN_SRC emacs-lisp
-;; (use-package mastodon)
-;; (setq mastodon-instance-url "https://cmx.social")
-#+END_SRC
+* Email
+
+  I use /mu4e/ to send and receive emails. To have the following configuration
+  work correctly, you have to install [[https://www.djcbsoftware.nl/code/mu/mu4e/index.html#SEC_Contents][/mu/]] with emacs support, then
+  [[http://www.offlineimap.org][/offlineimap/]] as a service to receive and send emails. You can click on their
+  names to refer to their documentation respectively, or you can checkout [[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][A
+  COMPLETE GUIDE TO EMAIL IN EMACS USING MU AND MU4E]] for a specific
+  walkthrough.
+
+  I use evil-mu4e to have a consistent vim keymapping experience when working
+  with emails. You should change the path to the mail directory you set up with mu.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil-mu4e)
+    (require 'evil-mu4e)
+
+    (setq mu4e-maildir "~/Mail")
+    (setq mu4e-confirm-quit nil)
+  #+END_SRC
+
+  Setting mu4e contexts, this is good when you have more than one email
+  addresses.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq mu4e-contexts
+    `( ,(make-mu4e-context
+        :name "Yandex"
+        :match-func (lambda (msg) (when msg
+          (string-prefix-p "/Yandex" (mu4e-message-field msg :maildir))))
+        :vars '(
+          (user-mail-address . "send@hailang.email")
+          (mu4e-trash-folder . "/Yandex/Trash")
+          (mu4e-refile-folder . "/Yandex/Archive")
+          (mu4e-sent-folder . "/Yandex/Sent")
+          (mu4e-drafts-folder . "/Yandex/Drafts")
+          ))
+    ))
+  #+END_SRC
+
+** Reading Emails
+
+   Display sender's email address along with their names.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-view-show-addresses t)
+   #+END_SRC
+
+   Save attachments in my ~/Downloads directory, not my home directory. This
+   works better on a Mac.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-attachment-dir "~/Downloads")
+   #+END_SRC
+
+   Some html emails are hideous to read in emacs, this binds /a h/ to open the
+   email in your default browser.
+
+   #+BEGIN_SRC emacs-lisp
+     (add-to-list 'mu4e-view-actions
+       '("html in browser" . mu4e-action-view-in-browser)
+       t)
+   #+END_SRC
+
+** Composing Emails
+
+   Enable Org-style tables and list manipulation.
+
+   #+BEGIN_SRC emacs-lisp
+     (add-hook 'message-mode-hook 'turn-on-orgtbl)
+     (add-hook 'message-mode-hook 'turn-on-orgstruct++)
+   #+END_SRC
+
+   Once I’ve sent an email, kill the associated buffer instead of just burying it.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq message-kill-buffer-on-exit t)
+   #+END_SRC
+
+** Sending Emails
+
+   Send email with sendmail.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq message-send-mail-function 'message-send-mail-with-sendmail)
+     (setq message-sendmail-extra-arguments '("--read-envelope-from"))
+     (setq message-sendmail-f-is-evil 't)
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-sent-folder "~/Mail/Yandex/Sent"
+       mu4e-drafts-folder "~/Mail/Yandex/Drafts"
+       user-mail-address "send@hailang.email"
+       smtpmail-default-smtp-server "smtp.yandex.com"
+       smtpmail-smtp-server "smtp.yandex.com"
+       smtpmail-smtp-service 587)
+
+     (defvar my-mu4e-account-alist
+       '(("Yandex"
+         (mu4e-sent-folder "/Yandex/Sent")
+         (user-mail-address "send@hailang.email")
+         (smtpmail-smtp-user "send@hailang.email")
+         (smtpmail-local-domain "yandex.com")
+         (smtpmail-default-smtp-server "smtp.yandex.com")
+         (smtpmail-smtp-server "smtp.yandex.com")
+         (smtpmail-smtp-service 587)
+         )
+       ;; Include any other accounts here ...
+       ))
+
+     (defun my-mu4e-set-account ()
+       "Set the account for composing a message.
+        This function is taken from:
+          https://www.djcbsoftware.nl/code/mu/mu4e/Multiple-accounts.html"
+       (let* ((account
+         (if mu4e-compose-parent-message
+             (let ((maildir (mu4e-message-field mu4e-compose-parent-message :maildir)))
+         (string-match "/\\(.*?\\)/" maildir)
+         (match-string 1 maildir))
+           (completing-read (format "Compose with account: (%s) "
+                  (mapconcat #'(lambda (var) (car var))
+                 my-mu4e-account-alist "/"))
+                (mapcar #'(lambda (var) (car var)) my-mu4e-account-alist)
+                nil t nil nil (caar my-mu4e-account-alist))))
+        (account-vars (cdr (assoc account my-mu4e-account-alist))))
+         (if account-vars
+       (mapc #'(lambda (var)
+           (set (car var) (cadr var)))
+             account-vars)
+           (error "No email account found"))))
+     (add-hook 'mu4e-compose-pre-hook 'my-mu4e-set-account)
+   #+END_SRC

@@ -5,6 +5,9 @@
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 (package-initialize)
 
+;; For mu4e client
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu/mu4e")
+
 ;; Ensure that use-package is installed.
 ;;
 ;; If use-package isn't already installed, it's extremely likely that this is a
@@ -22,7 +25,8 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (moody which-key web-mode use-package sublime-themes solarized-theme smex rust-mode powerline-evil org-link-minor-mode org-bullets nord-theme multi-term mastodon markdown-mode htmlize helpful flycheck flx evil-surround evil-org evil-magit dumb-jump dired-hide-dotfiles diminish diff-hl counsel composer company-php auto-compile ag ac-php))))
+    (moody which-key web-mode use-package sublime-themes solarized-theme smex rust-mode powerline-evil org-link-minor-mode org-bullets nord-theme multi-term mastodon markdown-mode htmlize helpful flycheck flx evil-surround evil-org evil-magit dumb-jump dired-hide-dotfiles diminish diff-hl counsel composer company-php auto-compile ag ac-php)))
+ '(send-mail-function (quote mailclient-send-it)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
