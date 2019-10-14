@@ -931,9 +931,7 @@ comments below can be a good boilerplate to get you started.
       (concat
        "---\n"
        "title: " title "\n"
-       "date: " (format-time-string "%Y-%m-%d") "\n"
-       "layout: post\n"
-       "# pdf_file: " (hrs/slug-for title) ".pdf\n"
+       "date: " (format-time-string "%Y-%m-%d %H:%M:%S") "\n"
        "tags: []\n"
        "---\n\n"))
 
@@ -958,7 +956,7 @@ comments below can be a good boilerplate to get you started.
   COMPLETE GUIDE TO EMAIL IN EMACS USING MU AND MU4E]] for a specific
   walkthrough.
 
-  I use evil-mu4e to have a consistent vim keymapping experience when working
+  I use [[https://github.com/JorisE/evil-mu4e][/evil-mu4e/]] to have a consistent vim keymapping experience when working
   with emails. You should change the path to the mail directory you set up with mu.
 
   #+BEGIN_SRC emacs-lisp
@@ -1033,7 +1031,6 @@ comments below can be a good boilerplate to get you started.
 
    #+BEGIN_SRC emacs-lisp
      (setq message-send-mail-function 'message-send-mail-with-sendmail)
-     (setq message-sendmail-extra-arguments '("--read-envelope-from"))
      (setq message-sendmail-f-is-evil 't)
    #+END_SRC
 
