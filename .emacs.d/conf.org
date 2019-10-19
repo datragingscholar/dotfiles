@@ -1034,6 +1034,15 @@ comments below can be a good boilerplate to get you started.
      (setq message-kill-buffer-on-exit t)
    #+END_SRC
 
+   Set email identity.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq mu4e-compose-reply-to-address "send@hailang.email"
+      user-mail-address "send@hailang.mail"
+      user-full-name  "Lang Hai")
+     (setq mu4e-compose-signature "Lang Hai\nhttp://hailang.im\n")
+   #+END_SRC
+
 ** Sending Emails
 
    Send email with sendmail.
