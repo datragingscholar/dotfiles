@@ -1047,7 +1047,30 @@ comments below can be a good boilerplate to get you started.
      (setq mu4e-compose-reply-to-address "send@hailang.email"
       user-mail-address "send@hailang.mail"
       user-full-name  "Lang Hai")
-     (setq mu4e-compose-signature "Lang Hai\nhttp://hailang.im\n")
+     (setq mu4e-compose-signature "Lang Hai\nhttps://hailang.im\n")
+   #+END_SRC
+
+   Attachment. Mark the file(s) in dired you would like to attach and press C-c
+   RET C-a, and you’ll be asked whether to attach them to an existing message,
+   or create a new one.
+
+   #+BEGIN_SRC emacs-lisp
+   (require 'gnus-dired)
+   ;; make the `gnus-dired-mail-buffers' function also work on
+   ;; message-mode derived modes, such as mu4e-compose-mode
+   (defun gnus-dired-mail-buffers ()
+     "Return a list of active message buffers."
+     (let (buffers)
+       (save-current-buffer
+         (dolist (buffer (buffer-list t))
+           (set-buffer buffer)
+           (when (and (derived-mode-p 'message-mode)
+                   (null message-sent-message-via))
+             (push (buffer-name buffer) buffers))))
+       (nreverse buffers)))
+
+   (setq gnus-dired-mail-mode 'mu4e-user-agent)
+   (add-hook 'dired-mode-hook 'turn-on-gnus-dired-mode)
    #+END_SRC
 
 ** Sending Emails
