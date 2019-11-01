@@ -724,6 +724,13 @@ comments below can be a good boilerplate to get you started.
       :diminish org-indent-mode)
   #+END_SRC
 
+  Handles indentation in all source blocks. Otherwise we'd have to use /C-c '/
+  to edit source code to not mess up with our indentations
+
+  #+BEGIN_SRC emacs-lisp
+    (setq org-src-tab-acts-natively t)
+  #+END_SRC
+
 ** Display preferences
 
 	 I like to see an outline of pretty bullets instead of a list of asterisks.
